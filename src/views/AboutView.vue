@@ -29,10 +29,7 @@ const clickHandler2 = ()=> {
 </script>
 
 
-<style>
-.about {
-  width: 300px;
-}
+<style scoped>
 h2 {
   color: red
 }

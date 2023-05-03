@@ -12,7 +12,8 @@ import HelloWorld from './components/HelloWorld.vue'
 
       <nav>
         <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/v-if">v-if</RouterLink>
+        <RouterLink to="/v-for">v-for</RouterLink>
       </nav>
     </div>
   </header>
@@ -25,7 +26,9 @@ header {
   line-height: 1.5;
   max-height: 100vh;
 }
-
+.about {
+  width: 800px;
+}
 .logo {
   display: block;
   margin: 0 auto 2rem;
