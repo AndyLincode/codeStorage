@@ -6,6 +6,10 @@ import TextScoped1 from "./components/TextScoped1.vue";
 import TextScoped2 from "./components/TextScoped2.vue";
 import ParagraphComponent from "./components/ParagraphComponent.vue";
 import Box from "./components/Box.vue";
+import InputForm from "./components/InputForm.vue";
+import { ref } from "vue";
+
+const inputValue = ref('')
 </script>
 
 <template>
@@ -14,7 +18,8 @@ import Box from "./components/Box.vue";
 
     <div class="wrapper">
 
-      <Box />
+      <InputForm v-model="inputValue"/>
+      <p>{{ inputValue }}</p>
 
       <nav>
         <RouterLink to="/">Home</RouterLink>
