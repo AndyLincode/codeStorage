@@ -1,6 +1,7 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import CardBase from './components/CardBase.vue';
 </script>
 
 <template>
@@ -9,6 +10,17 @@ import HelloWorld from './components/HelloWorld.vue'
 
     <div class="wrapper">
       <!-- <HelloWorld msg="You did it!" /> -->
+      <CardBase title="Title from App">
+        <template #title>
+          <h1>
+            Title from App with Slot
+          </h1>
+        </template>
+        <template #content>
+          <p>來自父元件的內文</p>
+          <p>是HTML的模板</p>
+        </template>
+      </CardBase>
 
       <nav>
         <RouterLink to="/">Home</RouterLink>
