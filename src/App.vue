@@ -4,6 +4,7 @@ import HelloWorld from "./components/HelloWorld.vue";
 import CardBase from "./components/CardBase.vue";
 import TextScoped1 from "./components/TextScoped1.vue";
 import TextScoped2 from "./components/TextScoped2.vue";
+import ParagraphComponent from "./components/ParagraphComponent.vue";
 </script>
 
 <template>
@@ -11,6 +12,9 @@ import TextScoped2 from "./components/TextScoped2.vue";
     <!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" /> -->
 
     <div class="wrapper">
+
+      <ParagraphComponent />
+
       <!-- <HelloWorld msg="You did it!" /> -->
       <!-- <CardBase title="Title from App">
         <template #title>
@@ -21,10 +25,10 @@ import TextScoped2 from "./components/TextScoped2.vue";
           <p>是HTML的模板</p>
         </template>
       </CardBase> -->
-      <div class="container">
+      <!-- <div class="container">
         <TextScoped1 />
         <TextScoped2 />
-      </div>
+      </div> -->
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/v-if">v-if</RouterLink>
