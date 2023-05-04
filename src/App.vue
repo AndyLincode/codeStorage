@@ -1,7 +1,9 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-import CardBase from './components/CardBase.vue';
+import { RouterLink, RouterView } from "vue-router";
+import HelloWorld from "./components/HelloWorld.vue";
+import CardBase from "./components/CardBase.vue";
+import TextScoped1 from "./components/TextScoped1.vue";
+import TextScoped2 from "./components/TextScoped2.vue";
 </script>
 
 <template>
@@ -10,18 +12,19 @@ import CardBase from './components/CardBase.vue';
 
     <div class="wrapper">
       <!-- <HelloWorld msg="You did it!" /> -->
-      <CardBase title="Title from App">
+      <!-- <CardBase title="Title from App">
         <template #title>
-          <h1>
-            Title from App with Slot
-          </h1>
+          <h1>Title from App with Slot</h1>
         </template>
         <template #content>
           <p>來自父元件的內文</p>
           <p>是HTML的模板</p>
         </template>
-      </CardBase>
-
+      </CardBase> -->
+      <div class="container">
+        <TextScoped1 />
+        <TextScoped2 />
+      </div>
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/v-if">v-if</RouterLink>
