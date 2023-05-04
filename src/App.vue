@@ -9,7 +9,8 @@ import Box from "./components/Box.vue";
 import InputForm from "./components/InputForm.vue";
 import { ref } from "vue";
 
-const inputValue = ref('')
+const inputValue = ref("");
+const selectValue = ref("default");
 </script>
 
 <template>
@@ -17,9 +18,12 @@ const inputValue = ref('')
     <!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" /> -->
 
     <div class="wrapper">
-
-      <InputForm v-model="inputValue"/>
-      <p>{{ inputValue }}</p>
+      <InputForm
+        v-model:inputValue="inputValue"
+        v-model:selectValue="selectValue"
+      />
+      <p>輸入: {{ inputValue }}</p>
+      <p>下拉式: {{ selectValue }}</p>
 
       <nav>
         <RouterLink to="/">Home</RouterLink>
@@ -33,6 +37,9 @@ const inputValue = ref('')
 </template>
 
 <style scoped>
+.wrapper {
+  flex-direction: column;
+}
 header {
   line-height: 1.5;
   max-height: 100vh;
