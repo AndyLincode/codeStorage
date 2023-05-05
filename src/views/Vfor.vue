@@ -2,17 +2,23 @@
   <div class="about">
     <h1>v-for</h1>
     <ul>
+      <input type="text" v-model="title">
+      <button @click="addNewTodo">新增</button>
       <li class="todoItem" v-for="todo in todos" :key="todo.id">
-        <h2 class="todoTitle">{{ todo.title }}</h2>
+        <input type="checkbox" name="todo-item" :id="todo.id" v-model="todo.checked">
+        <label :for="todo.id"><h2 class="todoTitle" :class="{ done: todo.checked}">{{ todo.title }}</h2></label>
       </li>
     </ul>
   </div>
+
+
+
+
+
 </template>
 
 <script setup>
-import { reactive } from 'vue';
-
-
+import { reactive, ref } from 'vue';
 
 const todos = reactive([
   {
@@ -38,6 +44,20 @@ const todos = reactive([
     checked: false
   }
 ])
+const title =ref('')
+
+const addNewTodo = ()=> {
+  if(!title.value){
+    alert('請輸入標題!')
+    return
+  }
+  todos.push({
+  id: todos.length + 1,
+  title: title.value,
+  checked: false,
+})
+  title.value = ''
+}
 
 
 </script>
@@ -46,8 +66,14 @@ const todos = reactive([
 h2.done {
   text-decoration: line-through;
 }
+h2 {
+  cursor: pointer;
+}
 li {
   list-style: none;
+}
+input {
+  margin-left: 10px;
 }
 .todoItem {
   border: 2px solid lightblue;
