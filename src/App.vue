@@ -8,6 +8,7 @@ import ParagraphComponent from "./components/ParagraphComponent.vue";
 import Box from "./components/Box.vue";
 import InputForm from "./components/InputForm.vue";
 import { ref } from "vue";
+import Directives from "./components/Directives.vue";
 
 const inputValue = ref("");
 const selectValue = ref("default");
@@ -18,6 +19,7 @@ const selectValue = ref("default");
     <!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" /> -->
 
     <div class="wrapper">
+      <Directives />
       <InputForm
         v-model:inputValue="inputValue"
         v-model:selectValue="selectValue"
