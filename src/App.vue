@@ -7,10 +7,9 @@ import ProfileForm from "./components/ProfileForm.vue";
 const forms = {
   RegisterForm,
   ProfileForm,
-}
+};
 
-const currentForm = ref('RegisterForm')
-
+const currentForm = ref("RegisterForm");
 </script>
 
 <template>
@@ -18,15 +17,21 @@ const currentForm = ref('RegisterForm')
     <!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" /> -->
 
     <div class="wrapper">
-      <component :is="forms[currentForm]" />
-      <button v-if="currentForm === 'RegisterForm'" @click="currentForm = 'ProfileForm'">下一步</button>
+      <KeepAlive>
+        <component :is="forms[currentForm]" />
+      </KeepAlive>
+      <button
+        v-if="currentForm === 'RegisterForm'"
+        @click="currentForm = 'ProfileForm'"
+      >
+        下一步
+      </button>
       <template v-if="currentForm === 'ProfileForm'">
         <div>
-          <button  @click="currentForm = 'RegisterForm'">上一步</button>
-          <button >完成</button>
+          <button @click="currentForm = 'RegisterForm'">上一步</button>
+          <button>完成</button>
         </div>
       </template>
-
 
       <nav>
         <RouterLink to="/">Home</RouterLink>
