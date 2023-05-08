@@ -1,17 +1,16 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
-import HelloWorld from "./components/HelloWorld.vue";
-import CardBase from "./components/CardBase.vue";
-import TextScoped1 from "./components/TextScoped1.vue";
-import TextScoped2 from "./components/TextScoped2.vue";
-import ParagraphComponent from "./components/ParagraphComponent.vue";
-import Box from "./components/Box.vue";
-import InputForm from "./components/InputForm.vue";
 import { ref } from "vue";
-import Directives from "./components/Directives.vue";
+import RegisterForm from "./components/RegisterForm.vue";
+import ProfileForm from "./components/ProfileForm.vue";
 
-const inputValue = ref("");
-const selectValue = ref("default");
+const forms = {
+  RegisterForm,
+  ProfileForm,
+}
+
+const currentForm = ref('RegisterForm')
+
 </script>
 
 <template>
@@ -19,13 +18,15 @@ const selectValue = ref("default");
     <!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" /> -->
 
     <div class="wrapper">
-      <Directives />
-      <InputForm
-        v-model:inputValue="inputValue"
-        v-model:selectValue="selectValue"
-      />
-      <p>輸入: {{ inputValue }}</p>
-      <p>下拉式: {{ selectValue }}</p>
+      <component :is="forms[currentForm]" />
+      <button v-if="currentForm === 'RegisterForm'" @click="currentForm = 'ProfileForm'">下一步</button>
+      <template v-if="currentForm === 'ProfileForm'">
+        <div>
+          <button  @click="currentForm = 'RegisterForm'">上一步</button>
+          <button >完成</button>
+        </div>
+      </template>
+
 
       <nav>
         <RouterLink to="/">Home</RouterLink>

@@ -14,18 +14,6 @@ const vuetify = createVuetify({
   components,
   directives,
 });
-// app.directive('fsize', {
-//   mounted(el, binding) {
-//     el.style.fontSize = binding.value + "px";
-//   },
-//   updated(el, binding) {
-//     el.style.fontSize = binding.value + "px";
-//   }
-// })
-app.directive('fsize', (el, binding)=> {
-  el.style.fontSize = binding.value + (binding.arg || "px");
-})
-
 app.use(createPinia());
 app.use(router);
 app.use(vuetify);
