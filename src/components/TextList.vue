@@ -2,24 +2,27 @@
   <div>
     <h3>行數: {{ data.length }}</h3>
     <ul>
-      <li v-for="data in data" :key="data.id">{{ data.text }}</li>
+      <li v-for="item in data" :key="item.id">
+        {{ item.text }}<button @click="removeText(item.id)">刪除</button>
+      </li>
     </ul>
   </div>
 </template>
 
 <script setup>
 import { toRefs, watch } from "vue";
-const props = defineProps(["data", "number"]);
-const { number } = toRefs(props);
+const props = defineProps(["data"]);
+const emits = defineEmits(["remove"]);
+const { data } = toRefs(props);
 
-watch(
-  () => number.value,
-  () => {
-    console.log(number.value);
-  }
-);
 
-const { data } = props;
+const removeText = (id) => {
+  emits("remove", id);
+};
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+button {
+  margin-left: 10px;
+}
+</style>

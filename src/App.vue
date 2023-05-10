@@ -11,16 +11,15 @@ const data = ref([
   { id: 5, text: "Text 5" },
 ]);
 
-const number = ref(100);
+const removeText = (id) => {
+  data.value = data.value.filter((text) => text.id !== id);
+};
 </script>
 
 <template>
   <header>
     <!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" /> -->
-    {{ number }}
     <div class="wrapper">
-      <TextList :data="data" :number="number" />
-      <button @click="number = 200">change</button>
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/v-if">v-if</RouterLink>
@@ -28,7 +27,7 @@ const number = ref(100);
       </nav>
     </div>
   </header>
-
+  <TextList :data="data" @remove="removeText" />
   <RouterView />
 </template>
 
