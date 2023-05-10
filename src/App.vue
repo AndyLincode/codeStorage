@@ -1,38 +1,26 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
 import { ref } from "vue";
-import RegisterForm from "./components/RegisterForm.vue";
-import ProfileForm from "./components/ProfileForm.vue";
+import TextList from "./components/TextList.vue";
 
-const forms = {
-  RegisterForm,
-  ProfileForm,
-};
+const data = ref([
+  { id: 1, text: "Text 1" },
+  { id: 2, text: "Text 2" },
+  { id: 3, text: "Text 3" },
+  { id: 4, text: "Text 4" },
+  { id: 5, text: "Text 5" },
+]);
 
-const currentForm = ref("RegisterForm");
+const number = ref(100);
 </script>
 
 <template>
   <header>
     <!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" /> -->
-
+    {{ number }}
     <div class="wrapper">
-      <KeepAlive>
-        <component :is="forms[currentForm]" />
-      </KeepAlive>
-      <button
-        v-if="currentForm === 'RegisterForm'"
-        @click="currentForm = 'ProfileForm'"
-      >
-        下一步
-      </button>
-      <template v-if="currentForm === 'ProfileForm'">
-        <div>
-          <button @click="currentForm = 'RegisterForm'">上一步</button>
-          <button>完成</button>
-        </div>
-      </template>
-
+      <TextList :data="data" :number="number" />
+      <button @click="number = 200">change</button>
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/v-if">v-if</RouterLink>
