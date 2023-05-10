@@ -3,7 +3,7 @@
     <h3>行數: {{ data.length }}</h3>
     <ul>
       <li v-for="item in data" :key="item.id">
-        {{ item.text }}<button @click="removeText(item.id)">刪除</button>
+        {{ item.content }}<button @click="removeText(item.id)">刪除</button>
       </li>
     </ul>
   </div>

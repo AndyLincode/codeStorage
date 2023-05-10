@@ -1,22 +1,25 @@
 <script setup>
-import { RouterLink, RouterView } from "vue-router";
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import TextList from "./components/TextList.vue";
-import CardBase from "./components/Card/CardBase.vue";
+import UserTable from "./components/UserTable.vue";
+import useListData from "./composables/useListData";
 
-const data = ref([
-  { id: 1, text: "Text 1" },
-  { id: 2, text: "Text 2" },
-  { id: 3, text: "Text 3" },
-  { id: 4, text: "Text 4" },
-  { id: 5, text: "Text 5" },
+const { data, removeItem: removeText, sortByKey } = useListData([
+  {id:1, content:"這是訊息1"},
+  {id:2, content:"這是訊息2"},
+  {id:3, content:"這是訊息3"},
+  {id:4, content:"這是訊息4"},
+  {id:5, content:"這是訊息5"},
 ]);
 </script>
 
 <template>
 
-  <CardBase />
-
+  <div>
+    <button @click="sortByKey('content', 'desc')">排序</button>
+    <TextList :data="data" @remove="removeText" />
+  </div>
+  <UserTable />
 </template>
 
 <style scoped>
@@ -85,5 +88,9 @@ nav a:first-of-type {
     padding: 1rem 0;
     margin-top: 1rem;
   }
+}
+button {
+  width: 80px;
+  height: 30px;
 }
 </style>
