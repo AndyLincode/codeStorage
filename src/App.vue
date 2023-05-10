@@ -1,31 +1,18 @@
 <script setup>
-import { RouterLink, RouterView } from "vue-router";
 import { ref, onMounted } from "vue";
-import TextList from "./components/TextList.vue";
-import CardBase from "./components/Card/CardBase.vue";
 
-const data = ref([
-  { id: 1, text: "Text 1" },
-  { id: 2, text: "Text 2" },
-  { id: 3, text: "Text 3" },
-  { id: 4, text: "Text 4" },
-  { id: 5, text: "Text 5" },
-]);
+const inputControl = ref('')
+
+onMounted(()=> {
+  inputControl.value.focus();
+})
+
 </script>
 
 <template>
-  <header>
-    <!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" /> -->
-    <div class="wrapper">
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/v-if">v-if</RouterLink>
-        <RouterLink to="/v-for">v-for</RouterLink>
-      </nav>
-    </div>
-  </header>
-  <CardBase />
-  <RouterView />
+  <div>
+    <input type="text" ref="inputControl">
+  </div>
 </template>
 
 <style scoped>
