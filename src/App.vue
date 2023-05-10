@@ -2,27 +2,15 @@
 import { RouterLink, RouterView } from "vue-router";
 import { ref, onMounted } from "vue";
 import TextList from "./components/TextList.vue";
+import CardBase from "./components/Card/CardBase.vue";
 
-const data = ref([]);
-const loading = ref(false);
-
-const removeText = (id) => {
-  data.value = data.value.filter((text) => text.id !== id);
-};
-
-onMounted(() => {
-  loading.value = true;
-  setTimeout(() => {
-    data.value = [
-      { id: 1, text: "Text 1" },
-      { id: 2, text: "Text 2" },
-      { id: 3, text: "Text 3" },
-      { id: 4, text: "Text 4" },
-      { id: 5, text: "Text 5" },
-    ];
-    loading.value = false;
-  }, 2000);
-});
+const data = ref([
+  { id: 1, text: "Text 1" },
+  { id: 2, text: "Text 2" },
+  { id: 3, text: "Text 3" },
+  { id: 4, text: "Text 4" },
+  { id: 5, text: "Text 5" },
+]);
 </script>
 
 <template>
@@ -36,8 +24,7 @@ onMounted(() => {
       </nav>
     </div>
   </header>
-  <div v-if="loading">loading...</div>
-  <TextList :data="data" @remove="removeText" v-else/>
+  <CardBase />
   <RouterView />
 </template>
 
