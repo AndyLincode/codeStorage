@@ -1,18 +1,22 @@
 <script setup>
+import { RouterLink, RouterView } from "vue-router";
 import { ref, onMounted } from "vue";
+import TextList from "./components/TextList.vue";
+import CardBase from "./components/Card/CardBase.vue";
 
-const inputControl = ref('')
-
-onMounted(()=> {
-  inputControl.value.focus();
-})
-
+const data = ref([
+  { id: 1, text: "Text 1" },
+  { id: 2, text: "Text 2" },
+  { id: 3, text: "Text 3" },
+  { id: 4, text: "Text 4" },
+  { id: 5, text: "Text 5" },
+]);
 </script>
 
 <template>
-  <div>
-    <input type="text" ref="inputControl">
-  </div>
+
+  <CardBase />
+
 </template>
 
 <style scoped>
