@@ -1,96 +1,76 @@
 <script setup>
-import { ref } from "vue";
-import TextList from "./components/TextList.vue";
-import UserTable from "./components/UserTable.vue";
-import useListData from "./composables/useListData";
+// import jsonLogic from 'json-logic-js'
 
-const { data, removeItem: removeText, sortByKey } = useListData([
-  {id:1, content:"這是訊息1"},
-  {id:2, content:"這是訊息2"},
-  {id:3, content:"這是訊息3"},
-  {id:4, content:"這是訊息4"},
-  {id:5, content:"這是訊息5"},
-]);
+// const rule = {
+//   and: [
+//     {
+//       '==': [
+//         { var: 'name' },
+//         'John Doe'
+//       ]
+//     },
+//     {
+//       '>=': [
+//         { var: 'age' },
+//         30
+//       ]
+//     },
+//     {
+//       'in': [
+//         { var: 'location' },
+//         ['Taipei', 'New York']
+//       ]
+//     }
+//   ]
+// };
+
+// const data = {
+//   name: 'John Doe',
+//   age: 30,
+//   location: 'Taipei'
+// };
+
+// const result = jsonLogic.apply(rule, data);
+// console.log(result);
+import { ref } from "vue";
+import MultiFilter from "./components/MultiFilter.vue";
+
+const filterGroup = ref([{ sid: 1 }]);
+
+const addHandler = () => {
+  if (filterGroup.value.length > 0) {
+    filterGroup.value.push({
+      ...filterGroup.value[0],
+      sid: filterGroup.value[filterGroup.value.length - 1].sid + 1,
+    });
+  } else {
+    filterGroup.value.push({ sid: 1 });
+  }
+};
+
+const removeHandler = (id) => {
+  filterGroup.value = filterGroup.value.filter((e, i) => {
+    return e.sid !== id;
+  });
+};
 </script>
 
 <template>
-
-  <div>
-    <button @click="sortByKey('content', 'desc')">排序</button>
-    <TextList :data="data" @remove="removeText" />
+  <div class="container">
+    <div class="filter-wrap" v-for="filter in filterGroup" :key="filter.sid">
+      <MultiFilter />
+      <el-button type="danger" circle><el-icon><Delete /></el-icon></el-button>
+    </div>
+    <button @click="addHandler" v-if="filterGroup.length < 3">+</button>
   </div>
-  <UserTable />
 </template>
 
 <style scoped>
-.wrapper {
-  flex-direction: column;
-}
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-.about {
-  width: 800px;
-}
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
+.container {
   width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
 button {
-  width: 80px;
-  height: 30px;
+  margin-left: 10px;
 }
 </style>
