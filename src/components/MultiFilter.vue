@@ -1,47 +1,9 @@
 <template>
-    <el-select
-      v-model="condition1"
-      clearable
-      @clear="clearHandler"
-      placeholder="Select"
-    >
-      <el-option
-        v-for="item in options"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
-      />
-    </el-select>
-    <el-select
-      v-model="operatorSelect"
-      :disabled="!condition1"
-      placeholder="Select"
-    >
-      <el-option
-        v-for="item in operator"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
-      />
-    </el-select>
-    <el-select
-      v-model="condition2"
-      clearable
-      :disabled="!condition1"
-      :multiple="subOptions?.multiple"
-      :multiple-limit="subOptions?.multiple ? 3 : 0"
-      placeholder="Select"
-    >
-      <el-option
-        v-for="item in subOptions[condition1]"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
-      />
-    </el-select>
-  <!-- <el-select
-    v-model="condition1"
+  <el-select
+    :model-value="column"
+    :label="column"
     clearable
+    @change="columnHandler"
     @clear="clearHandler"
     placeholder="Select"
   >
@@ -53,52 +15,54 @@
     />
   </el-select>
   <el-select
-    v-model="operatorSelect"
-    :disabled="!condition1"
+    :model-value="operator"
+    :label="operator"
+    @change="operatorHandler"
     placeholder="Select"
   >
     <el-option
-      v-for="item in operator"
+      v-for="item in operatorOptions"
       :key="item.value"
       :label="item.label"
       :value="item.value"
     />
   </el-select>
   <el-select
-    v-model="condition2"
-    clearable
-    :disabled="!condition1"
-    :multiple="subOptions?.multiple"
-    :multiple-limit="subOptions?.multiple ? 3 : 0"
+    v-if="subItem.multiple"
+    :model-value="value"
+    @change="valueHandler"
+    :disabled="!column"
+    multiple
+    :multiple-limit="subItem?.multiple ? 3 : 0"
     placeholder="Select"
   >
     <el-option
-      v-for="item in subOptions[condition1]"
+      v-for="item in subItem[column]"
       :key="item.value"
       :label="item.label"
       :value="item.value"
     />
-  </el-select> -->
-  <!-- <div>{{ subOptions[condition1] }}</div> -->
+  </el-select>
+  <el-select
+    v-else
+    :model-value="value"
+    @change="valueHandler"
+    :disabled="!column"
+    placeholder="Select"
+  >
+    <el-option
+      v-for="item in subItem[column]"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value"
+    />
+  </el-select>
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, toRefs, watchEffect, watch } from "vue";
 
-const condition1 = ref("");
-const condition2 = ref("");
-const subOptions = ref([]);
-const operatorSelect = ref("");
-const filterGroup = ref([
-  {
-    sid: 1,
-    column: condition1.value,
-    operator: operatorSelect.value,
-    value: condition2.value,
-  },
-]);
-
-// 幾個條件
+// // 幾個條件
 const options = [
   {
     value: "DATA_SOURCE",
@@ -114,14 +78,14 @@ const options = [
   },
 ];
 
-// 運算子
-const operator = [
+// // 運算子
+const operatorOptions = [
   { value: "==", label: "is" },
   { value: "!==", label: "is not" },
 ];
 
-// 條件選項 (透過Api來拉取有哪些選項??)
-const subItem = [
+// // 條件選項 (透過Api來拉取有哪些選項??)
+const initSubItem = [
   {
     multiple: false,
     DATA_SOURCE: [
@@ -157,22 +121,45 @@ const subItem = [
     ],
   },
 ];
+const subItem = ref([]);
 
 const clearHandler = () => {
-  condition1.value = "";
-  condition2.value = "";
-  subOptions.value = [];
-  operatorSelect.value = "";
+  emit("update:column", "");
+  emit("update:value", "");
+  subItem.value = [];
 };
 
-// const index = ref(options.findIndex((v, i) => v.value === "DATA_SOURCE"));
-// console.log(index.value);
+const props = defineProps(["column", "operator", "value"]);
+const { column, operator } = toRefs(props);
+const emit = defineEmits(["update:column", "update:operator", "update:value"]);
 
-watch(condition1, () => {
-  const index = options.findIndex((v, i) => v.value === condition1.value);
-  subOptions.value = subItem[index];
-  // console.log(subOptions.value);
+const columnHandler = (e) => {
+  emit("update:column", e);
+  emit("update:value", []);
+  subItem.value = [];
+};
+const operatorHandler = (e) => {
+  emit("update:operator", e);
+};
+const valueHandler = (e) => {
+  emit("update:value", e);
+};
+
+watchEffect(() => {
+  console.log(column.value);
 });
+
+watch(
+  () => column.value,
+  (newValue, oldValue) => {
+    console.log(newValue, oldValue);
+    if (newValue) {
+      const index = options.findIndex((v, i) => v.value === column.value);
+      subItem.value = initSubItem[index];
+      console.log(subItem.value);
+    }
+  }
+);
 </script>
 
 <style scoped></style>
