@@ -34,6 +34,7 @@
 // console.log(result);
 import { onBeforeMount, ref, watch } from "vue";
 import MultiFilter from "./components/MultiFilter.vue";
+import axios from "axios";
 
 const initFilter = { column: "", operator: "", value: "" };
 
@@ -45,6 +46,8 @@ const groupOperatorOption = ref([
 ]);
 
 const groupOperator = ref("");
+
+const dataFromServer = ref([]);
 
 onBeforeMount(() => {
   groupOperator.value = groupOperatorOption.value[0].value;
@@ -67,11 +70,28 @@ const removeHandler = (id) => {
   });
 };
 
-const showFilter = () => {
+const showFilter = async () => {
   if (filterGroup.value.length > 1) {
-    console.log([...filterGroup.value, { groupOperator: groupOperator.value }]);
+    // console.log([...filterGroup.value, { groupOperator: groupOperator.value }]);
+    const condition = [
+      ...filterGroup.value,
+      { groupOperator: groupOperator.value },
+    ];
+    const { data } = await axios.post(
+      `http://localhost:6001/filterData`,
+      condition
+    );
+
+    console.log(data);
+    dataFromServer.value = data;
   } else {
-    console.log(filterGroup.value);
+    // console.log(filterGroup.value);
+    const { data } = await axios.post(
+      `http://localhost:6001/filterData`,
+      filterGroup.value
+    );
+    console.log(data);
+    dataFromServer.value = data;
   }
 };
 
@@ -135,13 +155,13 @@ const showFilter = () => {
     </div>
   </div>
   <div class="filterGroupShow">
-    <ul v-for="filter in filterGroup">
-      <li><span>COLUMN: </span>{{ filter.column }}</li>
-      <li><span>OPERATOR: </span>{{ filter.operator }}</li>
-      <li><span>VALUE: </span>{{ filter.value }}</li>
+    <ul v-for="data in dataFromServer">
+      <li><span>DATA_SOURCE: </span>{{ data.DATA_SOURCE }}</li>
+      <li><span>CALL_TYPE: </span>{{ data.CALL_TYPE }}</li>
+      <li><span>CALL_CASE_LOG_FROM: </span>{{ data.CALL_CASE_LOG_FROM }}</li>
     </ul>
   </div>
-  <div>{{ filterGroup }}</div>
+  <!-- <div>{{ dataFromServer }}</div> -->
 </template>
 
 <style scoped>

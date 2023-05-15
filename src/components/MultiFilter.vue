@@ -46,6 +46,8 @@
   <el-select
     v-else
     :model-value="value"
+    multiple
+    :multiple-limit="1"
     @change="valueHandler"
     :disabled="!column"
     placeholder="Select"
