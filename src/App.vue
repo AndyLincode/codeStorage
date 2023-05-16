@@ -70,7 +70,7 @@ const removeHandler = (id) => {
   });
 };
 
-const showFilter = async () => {
+const showData = async () => {
   if (filterGroup.value.length > 1) {
     // console.log([...filterGroup.value, { groupOperator: groupOperator.value }]);
     const condition = [
@@ -93,6 +93,10 @@ const showFilter = async () => {
     console.log(data);
     dataFromServer.value = data;
   }
+};
+
+const showFilter = () => {
+  console.log(filterGroup.value);
 };
 
 // watch(
@@ -151,10 +155,12 @@ const showFilter = async () => {
         v-if="filterGroup.length < 3"
         ><el-icon><Plus /></el-icon
       ></el-button>
-      <button @click="showFilter">show filter</button>
+      <button @click="showData">show data</button>
+      <button @click="showFilter">show filterGroup</button>
     </div>
   </div>
   <div class="filterGroupShow">
+    <pre>{{ [...filterGroup, { groupOperator: groupOperator }] }}</pre>
     <ul v-for="data in dataFromServer">
       <li><span>DATA_SOURCE: </span>{{ data.DATA_SOURCE }}</li>
       <li><span>CALL_TYPE: </span>{{ data.CALL_TYPE }}</li>
