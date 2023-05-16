@@ -1,195 +1,46 @@
 <script setup>
-// import jsonLogic from 'json-logic-js'
+import { ref, computed } from "vue";
+import Page1 from "./components/Page1.vue";
+import Page2 from "./components/Page2.vue";
+import Page3 from "./components/Page3.vue";
 
-// const rule = {
-//   and: [
-//     {
-//       '==': [
-//         { var: 'name' },
-//         'John Doe'
-//       ]
-//     },
-//     {
-//       '>=': [
-//         { var: 'age' },
-//         30
-//       ]
-//     },
-//     {
-//       'in': [
-//         { var: 'location' },
-//         ['Taipei', 'New York']
-//       ]
-//     }
-//   ]
-// };
-
-// const data = {
-//   name: 'John Doe',
-//   age: 30,
-//   location: 'Taipei'
-// };
-
-// const result = jsonLogic.apply(rule, data);
-// console.log(result);
-import { onBeforeMount, ref, watch } from "vue";
-import MultiFilter from "./components/MultiFilter.vue";
-import axios from "axios";
-
-const initFilter = { column: "", operator: "", value: "" };
-
-const filterGroup = ref([{ sid: 1, column: "", operator: "", value: "" }]);
-
-const groupOperatorOption = ref([
-  { value: "and", label: "and", default: true },
-  { value: "or", label: "or" },
-]);
-
-const groupOperator = ref("");
-
-const dataFromServer = ref([]);
-
-onBeforeMount(() => {
-  groupOperator.value = groupOperatorOption.value[0].value;
-});
-
-const addHandler = () => {
-  if (filterGroup.value.length > 0) {
-    filterGroup.value.push({
-      ...initFilter,
-      sid: filterGroup.value[filterGroup.value.length - 1].sid + 1,
-    });
-  } else {
-    filterGroup.value.push({ ...initFilter, sid: 1 });
-  }
+const routes = {
+  "/": {
+    component: Page1,
+    label: "頁面1",
+  },
+  "/2": {
+    component: Page2,
+    label: "頁面2",
+  },
+  "/3": {
+    component: Page3,
+    label: "頁面3",
+  },
 };
 
-const removeHandler = (id) => {
-  filterGroup.value = filterGroup.value.filter((e, i) => {
-    return e.sid !== id;
-  });
+const currentPath = ref(location.pathname);
+const currentPage = computed(
+  () => routes[currentPath.value].component || Page1
+);
+
+const changeRoute = (path) => {
+  history.pushState(null, null, path);
+  currentPath.value = location.pathname;
 };
-
-const showData = async () => {
-  if (filterGroup.value.length > 1) {
-    // console.log([...filterGroup.value, { groupOperator: groupOperator.value }]);
-    const condition = [
-      ...filterGroup.value,
-      { groupOperator: groupOperator.value },
-    ];
-    const { data } = await axios.post(
-      `http://localhost:6001/filterData`,
-      condition
-    );
-
-    console.log(data);
-    dataFromServer.value = data;
-  } else {
-    // console.log(filterGroup.value);
-    const { data } = await axios.post(
-      `http://localhost:6001/filterData`,
-      filterGroup.value
-    );
-    console.log(data);
-    dataFromServer.value = data;
-  }
-};
-
-const showFilter = () => {
-  console.log(filterGroup.value);
-};
-
-// watch(
-//   () => filterGroup.value,
-//   (newValue, oldValue) => {
-//     console.log(newValue, oldValue);
-//   },
-//   {
-//     deep: true,
-//   }
-// );
 </script>
 
 <template>
-  <div class="container">
-    <div
-      class="filter-wrap"
-      v-for="(filter, index) in filterGroup"
-      :key="filter.sid"
+  <nav>
+    <a
+      v-for="(route, path) in routes"
+      :href="path"
+      @click.prevent="changeRoute(path)"
     >
-      <div class="operator-wrap">
-        <el-select
-          v-if="index == 1"
-          v-model="groupOperator"
-          :label="groupOperator"
-        >
-          <el-option
-            v-for="item in groupOperatorOption"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </div>
-      <el-text
-        class="operator-text"
-        size="large"
-        v-if="index !== 0 && index !== 1"
-      >
-        {{ groupOperator + " " }}
-      </el-text>
-      <MultiFilter
-        v-model:column="filterGroup[index].column"
-        v-model:operator="filterGroup[index].operator"
-        v-model:value="filterGroup[index].value"
-      />
-      <el-button type="danger" circle @click="removeHandler(filter.sid)"
-        ><el-icon><Delete /></el-icon
-      ></el-button>
-    </div>
-    <div class="button-group">
-      <el-button
-        type="primary"
-        circle
-        @click="addHandler"
-        v-if="filterGroup.length < 3"
-        ><el-icon><Plus /></el-icon
-      ></el-button>
-      <button @click="showData">show data</button>
-      <button @click="showFilter">show filterGroup</button>
-    </div>
-  </div>
-  <div class="filterGroupShow">
-    <pre>{{ [...filterGroup, { groupOperator: groupOperator }] }}</pre>
-    <ul v-for="data in dataFromServer">
-      <li><span>DATA_SOURCE: </span>{{ data.DATA_SOURCE }}</li>
-      <li><span>CALL_TYPE: </span>{{ data.CALL_TYPE }}</li>
-      <li><span>CALL_CASE_LOG_FROM: </span>{{ data.CALL_CASE_LOG_FROM }}</li>
-    </ul>
-  </div>
-  <!-- <div>{{ dataFromServer }}</div> -->
+      {{ route.label }}
+    </a>
+    <component :is="currentPage" />
+  </nav>
 </template>
 
-<style scoped>
-.container {
-  width: 100%;
-}
-.filter-wrap {
-  margin: 5px 0;
-}
-.operator-wrap {
-  width: 80px;
-  margin: 5px 0;
-}
-button {
-  margin-left: 10px;
-}
-.button-group {
-  margin-top: 10px;
-}
-
-ul {
-  margin: 5px;
-  border: 1px solid #ccc;
-}
-</style>
+<style scoped></style>
