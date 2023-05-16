@@ -1,0 +1,72 @@
+{
+  "filters": [
+    {
+      "filter": {
+        "value": {
+          "type": "exact",
+          "value": "Template"
+        },
+        "operator": "enum_contains"
+      },
+      "property": "R]c^"
+    },
+    {
+      "filters": [
+        {
+          "filter": {
+            "operator": "is_not_empty"
+          },
+          "property": "R]c^"
+        },
+        {
+          "filter": {
+            "operator": "is_not_empty"
+          },
+          "property": "R]c^"
+        }
+      ],
+      "operator": "and"
+    },
+    {
+      "filters": [
+        {
+          "filter": {
+            "value": {
+              "type": "exact",
+              "value": "Records"
+            },
+            "operator": "enum_contains"
+          },
+          "property": "R]c^"
+        },
+        {
+          "filters": [
+            {
+              "filter": {
+                "value": {
+                  "type": "exact",
+                  "value": "Meeting"
+                },
+                "operator": "string_is"
+              },
+              "property": "title"
+            },
+            {
+              "filter": {
+                "value": {
+                  "type": "exact",
+                  "value": "Records"
+                },
+                "operator": "enum_does_not_contain"
+              },
+              "property": "R]c^"
+            }
+          ],
+          "operator": "and"
+        }
+      ],
+      "operator": "or"
+    }
+  ],
+  "operator": "or"
+}
