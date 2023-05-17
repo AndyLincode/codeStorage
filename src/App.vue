@@ -32,7 +32,7 @@
 
 // const result = jsonLogic.apply(rule, data);
 // console.log(result);
-import { onBeforeMount, ref, watch } from "vue";
+import { onBeforeMount, ref, computed } from "vue";
 import MultiFilter from "./components/MultiFilter.vue";
 import axios from "axios";
 
@@ -48,11 +48,13 @@ const groupOperatorOption = ref([
 ]);
 
 const groupOperator = ref("");
+const subGroupOperator = ref("");
 
 const dataFromServer = ref([]);
 
 onBeforeMount(() => {
   groupOperator.value = groupOperatorOption.value[0].value;
+  subGroupOperator.value = groupOperatorOption.value[0].value;
 });
 
 const addHandler = () => {
@@ -72,8 +74,45 @@ const addHandler = () => {
     });
   }
 };
+// const addSubGroupHandler = (index) => {
+//   const hasGroupOperatorAnd = filterGroup.value[index].filters.some(
+//     (item) => item.groupOperator === "and" || item.groupOperator === "or"
+//   );
+//   if (filterGroup.value[index].filters.length < 1 && !hasGroupOperatorAnd) {
+//     filterGroup.value[index].filters.push({ ...initFilter, belong: "sub" });
+//   } else if (
+//     filterGroup.value[index].filters.length === 1 &&
+//     !hasGroupOperatorAnd
+//   ) {
+//     filterGroup.value[index].filters.push({ ...initFilter, belong: "sub" });
+//     filterGroup.value[index].filters.push({ groupOperator: "and" });
+//   } else if (
+//     filterGroup.value[index].filters.length > 1 &&
+//     hasGroupOperatorAnd
+//   ) {
+//     const arr1 = filterGroup.value[index].filters.slice(0, 1);
+//     arr1.push({ ...initFilter, belong: "sub" });
+//     const arr2 = filterGroup.value[index].filters.slice(2);
+//     filterGroup.value[index].filters = arr1.concat(arr2);
+//   } else {
+//     filterGroup.value[index].filters.push({ ...initFilter, belong: "sub" });
+//   }
+// };
 const addSubGroupHandler = (index) => {
-  filterGroup.value[index].filters.push({ ...initFilter, belong: "sub" });
+  const filters = filterGroup.value[index].filters;
+  const hasGroupOperatorAnd = filters.some(
+    (item) => item.groupOperator === "and" || item.groupOperator === "or"
+  );
+
+  if (filters.length < 1 && !hasGroupOperatorAnd) {
+    filters.push({ ...initFilter, belong: "sub" });
+  } else if (filters.length === 1 && !hasGroupOperatorAnd) {
+    filters.push({ ...initFilter, belong: "sub" }, { groupOperator: "and" });
+  } else if (filters.length > 1 && hasGroupOperatorAnd) {
+    filters.splice(1, 0, { ...initFilter, belong: "sub" });
+  } else {
+    filters.push({ ...initFilter, belong: "sub" });
+  }
 };
 
 const removeHandler = (belong, index, mainIndex) => {
@@ -85,10 +124,15 @@ const removeHandler = (belong, index, mainIndex) => {
     const arr2 = filterGroup.value.slice(index + 1);
     filterGroup.value = arr1.concat(arr2);
   } else if (belong === "sub") {
-    const arr1 = filterGroup.value[mainIndex].filters.slice(0, index);
-    const arr2 = filterGroup.value[mainIndex].filters.slice(index + 1);
-    filterGroup.value[mainIndex].filters = arr1.concat(arr2);
+    if (filterGroup.value[mainIndex].filters.length <= 2) {
+      filterGroup.value[mainIndex].filters = [];
+    } else {
+      const arr1 = filterGroup.value[mainIndex].filters.slice(0, index);
+      const arr2 = filterGroup.value[mainIndex].filters.slice(index + 1);
+      filterGroup.value[mainIndex].filters = arr1.concat(arr2);
+    }
   }
+  // console.log(filterGroup.value[mainIndex].filters.length);
 };
 
 const showData = async () => {
@@ -118,6 +162,10 @@ const showData = async () => {
 
 const showFilter = () => {
   console.log(filterGroup.value);
+};
+
+const isOperator = (obj) => {
+  return obj.groupOperator === "and" || obj.groupOperator === "or";
 };
 
 // watch(
@@ -173,38 +221,44 @@ const showFilter = () => {
         size="small"
         circle
         @click="addSubGroupHandler(index)"
-        v-if="filterGroup.filter.length < 3"
+        v-if="
+          filter.filters.filter((item) => item.groupOperator !== 'and')
+            .length <= 1
+        "
         ><el-icon><Plus /></el-icon
       ></el-button>
-      <div class="secondFilterGroup" v-for="(sub, index2) in filter.filters">
-        <span v-if="index2 === 0">WHERE </span
-        ><span v-else style="margin-left: 60px"></span>
-        <div class="operator-select">
-          <el-select
-            v-if="filter.filters.length > 1 && index2 === 1"
-            v-model="groupOperator"
-            :label="groupOperator"
-          >
-            <el-option
-              v-for="item in groupOperatorOption"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
+      <div v-for="(sub, index2) in filter.filters">
+        <div class="secondFilterGroup" v-if="!isOperator(sub)">
+          <span v-if="index2 === 0">WHERE </span
+          ><span v-else style="margin-left: 60px"></span>
+          <div class="operator-select">
+            <el-select
+              v-if="filter.filters.length > 1 && index2 === 1"
+              v-model="filterGroup[index].filters[2].groupOperator"
+              :label="filterGroup[index].filters[2].groupOperator"
+            >
+              <el-option
+                v-for="item in groupOperatorOption"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </div>
+          <MultiFilter
+            v-model:column="filterGroup[index].filters[index2].column"
+            v-model:operator="filterGroup[index].filters[index2].operator"
+            v-model:value="filterGroup[index].filters[index2].value"
+            v-if="index2 !== 2"
+          />
+          <el-button
+            type="danger"
+            size="small"
+            circle
+            @click="removeHandler(sub.belong, index2, index)"
+            ><el-icon><Delete /></el-icon
+          ></el-button>
         </div>
-        <MultiFilter
-          v-model:column="filterGroup[index].filters[index2].column"
-          v-model:operator="filterGroup[index].filters[index2].operator"
-          v-model:value="filterGroup[index].filters[index2].value"
-        />
-        <el-button
-          type="danger"
-          size="small"
-          circle
-          @click="removeHandler(sub.belong, index2, index)"
-          ><el-icon><Delete /></el-icon
-        ></el-button>
       </div>
     </div>
     <div class="button-group">
