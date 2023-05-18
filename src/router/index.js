@@ -30,7 +30,7 @@ const router = createRouter({
       ]
     },
     {
-      path: '/3',
+      path: '/3/:id?',
       name: 'page3',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
