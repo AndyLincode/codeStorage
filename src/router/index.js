@@ -29,7 +29,7 @@ const router = createRouter({
           component: EducationExperience,
         }
       ],
-      alias: ['userPage', 'infoPage']
+      alias: ['/userPage', '/infoPage']
     },
     {
       path: '/:id',
