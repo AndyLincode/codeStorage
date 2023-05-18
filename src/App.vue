@@ -183,7 +183,7 @@ const isOperator = (obj) => {
   <div class="container">
     <div class="operator-select">
       <el-select
-        v-if="filterGroup.length > 1"
+        v-if="filterGroup.length > 1 || filterGroup[0].filters.length > 0"
         v-model="groupOperator"
         :label="groupOperator"
       >
@@ -223,7 +223,7 @@ const isOperator = (obj) => {
         @click="addSubGroupHandler(index)"
         v-if="
           filter.filters.filter((item) => item.groupOperator !== 'and')
-            .length <= 1
+            .length <= 3
         "
         ><el-icon><Plus /></el-icon
       ></el-button>
@@ -231,11 +231,29 @@ const isOperator = (obj) => {
         <div class="secondFilterGroup" v-if="!isOperator(sub)">
           <span v-if="index2 === 0">WHERE </span
           ><span v-else style="margin-left: 60px"></span>
+          <el-text
+            class="operator-text"
+            size="large"
+            v-if="index2 !== 0 && index2 !== 1"
+          >
+            {{
+              filterGroup[index].filters[filterGroup[index].filters.length - 1]
+                .groupOperator
+            }}
+          </el-text>
           <div class="operator-select">
             <el-select
               v-if="filter.filters.length > 1 && index2 === 1"
-              v-model="filterGroup[index].filters[2].groupOperator"
-              :label="filterGroup[index].filters[2].groupOperator"
+              v-model="
+                filterGroup[index].filters[
+                  filterGroup[index].filters.length - 1
+                ].groupOperator
+              "
+              :label="
+                filterGroup[index].filters[
+                  filterGroup[index].filters.length - 1
+                ].groupOperator
+              "
             >
               <el-option
                 v-for="item in groupOperatorOption"
@@ -249,7 +267,6 @@ const isOperator = (obj) => {
             v-model:column="filterGroup[index].filters[index2].column"
             v-model:operator="filterGroup[index].filters[index2].operator"
             v-model:value="filterGroup[index].filters[index2].value"
-            v-if="index2 !== 2"
           />
           <el-button
             type="danger"
@@ -266,7 +283,7 @@ const isOperator = (obj) => {
         type="primary"
         circle
         @click="addHandler"
-        v-if="filterGroup.length < 3"
+        v-if="filterGroup.length < 5"
         ><el-icon><Plus /></el-icon
       ></el-button>
       <button @click="showData">show data</button>
