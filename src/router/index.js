@@ -12,7 +12,7 @@ const router = createRouter({
       component: Page1
     },
     {
-      path: '/2',
+      path: '/2/:id?',
       name: 'Page2',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
