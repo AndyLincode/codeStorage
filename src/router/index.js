@@ -9,11 +9,12 @@ const router = createRouter({
     {
       path: '/',
       name: 'Page1',
-      component: Page1
+      component: Page1,
+      alias: '/home'
     },
     {
-      path: '/2/:id?',
-      name: 'Page2',
+      path: '/:id',
+      name: 'user',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
@@ -27,11 +28,12 @@ const router = createRouter({
           path: 'education',
           component: EducationExperience,
         }
-      ]
+      ],
+      alias: ['userPage', 'infoPage']
     },
     {
-      path: '/3/:id?',
-      name: 'page3',
+      path: '/:id',
+      name: 'data',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
