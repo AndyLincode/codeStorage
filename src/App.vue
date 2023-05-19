@@ -28,4 +28,14 @@
   <router-view></router-view>
 </template>
 
-<style scoped></style>
+<style  scoped>
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.router-link-exact-active {
+  background-color: cadetblue;
+  color: #fff
+}
+</style>
