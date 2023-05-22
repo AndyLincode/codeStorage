@@ -147,21 +147,21 @@ const valueHandler = (e) => {
   emit("update:value", e);
 };
 
-watchEffect(() => {
-  console.log(column.value);
-});
+// watchEffect(() => {
+//   console.log(column.value);
+// });
 
-watch(
-  () => column.value,
-  (newValue, oldValue) => {
-    console.log(newValue, oldValue);
-    if (newValue) {
-      const index = options.findIndex((v, i) => v.value === column.value);
-      subItem.value = initSubItem[index];
-      console.log(subItem.value);
-    }
-  }
-);
+// watch(
+//   () => column.value,
+//   (newValue, oldValue) => {
+//     console.log(newValue, oldValue);
+//     if (newValue) {
+//       const index = options.findIndex((v, i) => v.value === column.value);
+//       subItem.value = initSubItem[index];
+//       console.log(subItem.value);
+//     }
+//   }
+// );
 </script>
 
 <style scoped></style>

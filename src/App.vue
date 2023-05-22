@@ -74,30 +74,7 @@ const addHandler = () => {
     });
   }
 };
-// const addSubGroupHandler = (index) => {
-//   const hasGroupOperatorAnd = filterGroup.value[index].filters.some(
-//     (item) => item.groupOperator === "and" || item.groupOperator === "or"
-//   );
-//   if (filterGroup.value[index].filters.length < 1 && !hasGroupOperatorAnd) {
-//     filterGroup.value[index].filters.push({ ...initFilter, belong: "sub" });
-//   } else if (
-//     filterGroup.value[index].filters.length === 1 &&
-//     !hasGroupOperatorAnd
-//   ) {
-//     filterGroup.value[index].filters.push({ ...initFilter, belong: "sub" });
-//     filterGroup.value[index].filters.push({ groupOperator: "and" });
-//   } else if (
-//     filterGroup.value[index].filters.length > 1 &&
-//     hasGroupOperatorAnd
-//   ) {
-//     const arr1 = filterGroup.value[index].filters.slice(0, 1);
-//     arr1.push({ ...initFilter, belong: "sub" });
-//     const arr2 = filterGroup.value[index].filters.slice(2);
-//     filterGroup.value[index].filters = arr1.concat(arr2);
-//   } else {
-//     filterGroup.value[index].filters.push({ ...initFilter, belong: "sub" });
-//   }
-// };
+
 const addSubGroupHandler = (index) => {
   const filters = filterGroup.value[index].filters;
   const hasGroupOperatorAnd = filters.some(
@@ -116,10 +93,8 @@ const addSubGroupHandler = (index) => {
 };
 
 const removeHandler = (belong, index, mainIndex) => {
-  // filterGroup.value = filterGroup.value.filter((e, i) => {
-  //   return e.sid !== id;
-  // });
   if (belong === "main") {
+    if (filterGroup.value.length === 1) return;
     const arr1 = filterGroup.value.slice(0, index);
     const arr2 = filterGroup.value.slice(index + 1);
     filterGroup.value = arr1.concat(arr2);
@@ -132,12 +107,10 @@ const removeHandler = (belong, index, mainIndex) => {
       filterGroup.value[mainIndex].filters = arr1.concat(arr2);
     }
   }
-  // console.log(filterGroup.value[mainIndex].filters.length);
 };
 
 const showData = async () => {
   if (filterGroup.value.length > 1) {
-    // console.log([...filterGroup.value, { groupOperator: groupOperator.value }]);
     const condition = [
       ...filterGroup.value,
       { groupOperator: groupOperator.value },
@@ -167,16 +140,6 @@ const showFilter = () => {
 const isOperator = (obj) => {
   return obj.groupOperator === "and" || obj.groupOperator === "or";
 };
-
-// watch(
-//   () => filterGroup.value,
-//   (newValue, oldValue) => {
-//     console.log(newValue, oldValue);
-//   },
-//   {
-//     deep: true,
-//   }
-// );
 </script>
 
 <template>
@@ -286,15 +249,13 @@ const isOperator = (obj) => {
         v-if="filterGroup.length < 5"
         ><el-icon><Plus /></el-icon
       ></el-button>
-      <button @click="showData">show data</button>
-      <button @click="showFilter">show filterGroup</button>
+      <!-- <button @click="showData">show data</button> -->
+      <!-- <button @click="showFilter">show filterGroup</button> -->
     </div>
     <div class="filterGroupShow">
       <pre>{{ [...filterGroup, { groupOperator: groupOperator }] }}</pre>
     </div>
   </div>
-
-  <!-- <div>{{ dataFromServer }}</div> -->
 </template>
 
 <style lang="scss" scoped>
