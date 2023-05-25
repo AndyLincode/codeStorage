@@ -8,6 +8,7 @@ const resetHandler = ()=> {
     nameInput: '',
   })
 }
+console.log(counterStore.theme);
 </script>
 <template>
   <div>
